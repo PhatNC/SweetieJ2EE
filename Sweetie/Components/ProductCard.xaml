@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="Sweetie.Components.ProductCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Sweetie.Components"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             x:Name="PDCard"
+             d:DesignHeight="250" d:DesignWidth="400">
+    <UserControl.Resources>
+      
+    </UserControl.Resources>
+
+    <Grid Width="400" Height="250">
+        <Border  BorderBrush="White" CornerRadius="10" Background="White" Padding="5">
+            <Border.Effect>
+                <DropShadowEffect />
+            </Border.Effect>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="70"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4.5*"/>
+                    <ColumnDefinition Width="5*"/>
+                </Grid.ColumnDefinitions>
+
+
+                <Grid Grid.Row="0" Grid.RowSpan="2">
+                    <Ellipse Height="300" Width="300" HorizontalAlignment="Right" VerticalAlignment="Center" Stroke="#FFF0A504" StrokeThickness="2"/>
+                    <Grid Margin="0,0,5,0" >
+                        <Ellipse Height="290" Width="290" HorizontalAlignment="Right" VerticalAlignment="Center" Stroke="#FFF0A504" StrokeThickness="2"/>
+                    </Grid>
+                    <Grid Margin="0,0,15,0">
+                        <Ellipse Height="280" Width="280" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="/Sweetie;component/Resources/Images/product.jpg" Stretch="UniformToFill"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                    </Grid>
+
+                </Grid>
+
+                <Grid Grid.Column="1" Grid.Row="0">
+                    <StackPanel Orientation="Vertical" Margin="10,0">
+                        <TextBlock Margin="2" Foreground="#000A12" TextAlignment="Center" FontFamily="{DynamicResource Medinah}" FontSize="25" TextWrapping="Wrap" TextTrimming="CharacterEllipsis">Dark Forest Choco</TextBlock>
+                        <TextBlock Margin="2" TextWrapping="Wrap" TextTrimming="WordEllipsis" MaxHeight="140">
+                     I'm a paragraph. Click here to add your own text and edit me. It’s easy. 
+                               Just click “Edit Text” or double click me to add your own content and make changes to the font. 
+                               Feel free to drag and drop me anywhere you like on your page. 
+                               I’m a great place for you to tell a story and let your users know a little more about you
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Column="1" Grid.Row="1">
+                    <ListViewItem VerticalAlignment="Center">
+                        <materialDesign:Chip Background="#FFFF9700" >
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" Foreground="#000A12" FontFamily="{DynamicResource Medinah}">Birthday Cake</TextBlock>
+                        </materialDesign:Chip>
+                    </ListViewItem>
+
+                    <Grid HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <Ellipse Height="60" Width="60"  Fill="#000A12" Opacity="0.95"/>
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" Foreground="White" FontFamily="{DynamicResource PlayfairDisplay-Bold}">$12</TextBlock>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+  
+    
+</UserControl>

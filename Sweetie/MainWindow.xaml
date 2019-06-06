@@ -1,0 +1,151 @@
+﻿<Window x:Class="Sweetie.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:Sweetie"
+        mc:Ignorable="d"
+        Title="Sweetie" Height="720" Width="1280" 
+        WindowStartupLocation="CenterScreen" WindowState="Maximized"
+        WindowStyle="None">
+    <Window.Resources>
+        <Style x:Key="tbxStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontFamily" Value="Cambria Math"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <DockPanel VerticalAlignment="Stretch" 
+                   HorizontalAlignment="Stretch">
+            <Grid DockPanel.Dock="Top">
+                <Grid.Background>
+                    <SolidColorBrush Color="#FF000A12"/>
+                </Grid.Background>
+                <StackPanel VerticalAlignment="Center" 
+                            Orientation="Horizontal" 
+                            HorizontalAlignment="Right">
+                    <TextBlock x:Name="txt_Email" 
+                               Text="admin" 
+                               Foreground="White" 
+                               VerticalAlignment="Center" 
+                               FontSize="25" 
+                               FontFamily="Cambria Math"/>
+                    <Ellipse Margin="10" 
+                             Height="50" Width="50">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="Resources/Images/profile.jpg" 
+                                        Stretch="UniformToFill" />
+                        </Ellipse.Fill>
+                    </Ellipse>
+                    <materialDesign:PopupBox Foreground="White" 
+                                             Margin="5" Width="45" 
+                                             Height="45" 
+                                             PlacementMode="BottomAndAlignRightEdges" 
+                                             StaysOpen="False" 
+                                             BorderBrush="{x:Null}">
+                        <StackPanel Width="100">
+                            <StackPanel.OpacityMask>
+                                <SolidColorBrush Color="Black"/>
+                            </StackPanel.OpacityMask>
+                            <Button Name="btn_AccountInfo" Content="Account" Click="Btn_AccountInfo_Click"/>
+                            <Button Content="Settings"/>
+                            <Button Content="Help"/>
+                            <Separator/>
+                            <Button x:Name="ButtonPopupLogout" Content="Logout"
+                                    Click="ButtonPopupLogout_Click"/>
+                            <Separator/>
+                            <Button x:Name="ButtonQuit" Content="Quit"
+                                    Click="ButtonQuit_Click"/>
+                        </StackPanel>
+                    </materialDesign:PopupBox>
+                </StackPanel>
+            </Grid>
+            <Grid DockPanel.Dock="Left">
+                <TreeView MinWidth="250" Background="#000A12" Foreground="White">
+                    <TreeViewItem Name="iDashboard" 
+                                  MouseDoubleClick="ISaleReport_MouseDoubleClick">
+                        <TreeViewItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Height="30" 
+                                                         Width="30" 
+                                                         Foreground="White" 
+                                                         Kind="ViewDashboard" 
+                                                         VerticalAlignment="Center"/>
+                                <TextBlock Style="{StaticResource tbxStyle}" 
+                                           Text="Dashboard"/>
+                            </StackPanel>
+                        </TreeViewItem.Header>
+                    </TreeViewItem>
+
+                    <TreeViewItem Name="iManager">
+                        <TreeViewItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Height="30" 
+                                                         Width="30" 
+                                                         Foreground="White" 
+                                                         Kind="ViewDashboard" 
+                                                         VerticalAlignment="Center"/>
+                                <TextBlock Style="{StaticResource tbxStyle}" 
+                                           Text="Management"/>
+                            </StackPanel>
+                        </TreeViewItem.Header>
+                        <TreeViewItem Name="iProductList" MouseDoubleClick="IProductList_MouseDoubleClick">
+                            <TreeViewItem.Header>
+                                <TextBlock Text="Product List" 
+                                           Style="{StaticResource tbxStyle}"/>
+                            </TreeViewItem.Header>
+                        </TreeViewItem>
+                        <TreeViewItem Name="iCategory" MouseDoubleClick="ICategory_MouseDoubleClick">
+                            <TreeViewItem.Header>
+                                <TextBlock Text="Category" 
+                                           Style="{StaticResource tbxStyle}"/>
+                            </TreeViewItem.Header>
+                        </TreeViewItem>
+                        <TreeViewItem Name="iAccount" MouseDoubleClick="IAccount_MouseDoubleClick" >
+                            <TreeViewItem.Header>
+                                <TextBlock Text="Account Management" 
+                                           Style="{StaticResource tbxStyle}"/>
+                            </TreeViewItem.Header>
+                        </TreeViewItem>
+                        <TreeViewItem Name="iExport" 
+                                      MouseDoubleClick="IExport_MouseDoubleClick" >
+                            <TreeViewItem.Header>
+                                <TextBlock Text="Export Bill" 
+                                           Style="{StaticResource tbxStyle}"/>
+                            </TreeViewItem.Header>
+                        </TreeViewItem>
+                        <TreeViewItem Name="iSaleReport" 
+                                      MouseDoubleClick="ISaleReport_MouseDoubleClick">
+                            <TreeViewItem.Header>
+                                <TextBlock Text="Sale Report" 
+                                           Style="{StaticResource tbxStyle}"/>
+                            </TreeViewItem.Header>
+                        </TreeViewItem>
+                    </TreeViewItem>
+                    <TreeViewItem Name="iAbout" MouseDoubleClick="IAbout_MouseDoubleClick">
+                        <TreeViewItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Height="30" 
+                                                         Width="30" 
+                                                         Foreground="White" 
+                                                         Kind="ViewDashboard" 
+                                                         VerticalAlignment="Center"/>
+                                <TextBlock Style="{StaticResource tbxStyle}"
+                                           Text="About Us"/>
+                            </StackPanel>
+                        </TreeViewItem.Header>
+                    </TreeViewItem>
+                </TreeView>
+            </Grid>
+            <Grid DockPanel.Dock="Right"></Grid>
+            <Grid DockPanel.Dock="Bottom"></Grid>
+            <Grid Name="GridContent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <Frame x:Name="Frame_Content" NavigationUIVisibility="Hidden" Panel.ZIndex="1"/>
+            </Grid>
+        </DockPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,116 @@
+﻿<Page x:Class="Sweetie.Pages.AccountList.AccountListPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Sweetie.Pages.AccountList"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"      
+      xmlns:control = "clr-namespace:Sweetie.Components"
+      xmlns:uc="clr-namespace:Sweetie.Components"
+      mc:Ignorable="d" 
+      d:DesignHeight="824" d:DesignWidth="1280"
+      Title="AccountListPage">
+    <Page.Resources>
+        <Style x:Key = "controlStyle" TargetType = "Button">
+            <Setter Property="Margin" Value="10,0" />
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="Cambria Math"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+    </Page.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0">
+            <Grid Background="#FFF3F3F3">
+                <Grid HorizontalAlignment="Left" 
+                  VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox Grid.Column="1"
+                             Padding="5,0,0,0"
+                             Width="300"
+                             Height="40"
+                             materialDesign:HintAssist.Hint="Search"
+                             materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
+                             BorderBrush="#000A12"
+                             Background="White"
+                             FontFamily="Cambria Math"
+                             FontSize="18"
+                             BorderThickness="1"
+                             Margin="20 0 0 0"
+                             VerticalAlignment="Center"/>
+                        <Button Height="40" Width="40" 
+                            Background="Transparent"
+                            BorderThickness="0" Padding="0">
+                            <Image Source="/Sweetie;component/Resources/Icons/search.png" Height="30" Width="30"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+                <Grid HorizontalAlignment="Right" >
+                    <StackPanel Height="50" Orientation="Horizontal" >
+                        <Button Name="addBtn" 
+                                Style="{StaticResource controlStyle}" 
+                                Content="Add"
+                                Background="#FF004883" Click="AddBtn_Click"/>
+                        <Button Name="updateBtn"
+                                Style="{StaticResource controlStyle}" 
+                                Content="Update"
+                                Background="#FF6F00"
+                                Click="UpdateBtn_Click"/>
+                        <Button Name="deleteBtn"
+                                Style="{StaticResource controlStyle}" 
+                                Content="Delete"
+                                Background="#FFD50000"
+                                Click="DeleteBtn_Click"/>
+                        <Button Name="refreshBtn"
+                                Style="{StaticResource controlStyle}" 
+                                Content="Refresh"
+                                Background="#00C853"
+                                Click="RefreshBtn_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1" VerticalAlignment="Stretch" Background="White">
+            <DataGrid Name="dgAccount"
+                      Margin="20"
+                      VerticalAlignment="Stretch"
+                      HorizontalAlignment="Stretch"
+                      CanUserSortColumns="True"
+                      CanUserAddRows="False"
+                      SelectionChanged="DgAccount_SelectionChanged"
+                      AutoGenerateColumns="False"
+                      materialDesign:DataGridAssist.CellPadding="13 8 8 8"
+                      materialDesign:DataGridAssist.ColumnHeaderPadding="8">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Username}"
+                                        Header="Username"
+                                        EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                    
+                    <materialDesign:MaterialDataGridTextColumn Binding="{Binding DisplayName}"
+                                                               Header="Display Name"
+                                                               EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" />
+
+                    <materialDesign:MaterialDataGridTextColumn Binding="{Binding Pass}"
+                                                               Header="Password"
+                                                               EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" 
+                                                               Visibility="Hidden"/>
+                    
+                    <DataGridCheckBoxColumn Binding="{Binding admin_flg}"
+                                            ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
+                                            EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}"
+                                            Header="Is Admin?"/>
+
+
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Page>
