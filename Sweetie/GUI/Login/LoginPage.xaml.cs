@@ -1,7 +1,11 @@
 ﻿using Sweetie.DAO;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,13 +28,14 @@ namespace Sweetie.Pages.Login
         {
             InitializeComponent();
         }
-
-        private void LoginBtn_Click(object sender, RoutedEventArgs e)
+        private static readonly HttpClient client = new HttpClient();
+        private async void LoginBtn_Click(object sender, RoutedEventArgs e)
         {
             string user = username.Text;
             string pass = password.Password.ToString();
 
-            if (isLogin(user, pass))
+            bool isLoged = await isLoginAsync(user, pass);
+            if (isLoged)
             {
                 var newScreen = new MainWindow();
                 newScreen.Show();
@@ -42,9 +47,46 @@ namespace Sweetie.Pages.Login
             }
         }
 
-        bool isLogin(string user, string pass)
+        async Task<bool> isLoginAsync(string user, string pass)
         {
-            return AccountDAO.Instance.Login(user, pass);
+            //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            //var values = new Dictionary<string, string>
+            //{
+            //    { "username", user },
+            //    { "password", pass }
+            //};
+            //var content = new FormUrlEncodedContent(values);
+
+
+            //var response = await client.PostAsync("http://shopping-server-13706.herokuapp.com/users/signin", content);
+
+            //var responseString = await response.Content.ReadAsStringAsync();
+            //MessageBox.Show(responseString);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://shopping-server-13706.herokuapp.com/users/signin");
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream())) {
+                string json = "{\"username\":\""+user+"\"," +
+                                "\"password\":\""+pass+"\"}";
+                //string json = @"{
+                //    'username':'admin',
+                //    'password':'12345678'
+                //}";
+                streamWriter.Write(json);
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+            var httpRespond = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpRespond.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+                MessageBox.Show(result);
+                if (result.Contains("token"))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void ExitBtn_Click(object sender, RoutedEventArgs e)
