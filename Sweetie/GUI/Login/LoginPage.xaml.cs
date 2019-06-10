@@ -16,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Sweetie.Utilities;
 
 namespace Sweetie.Pages.Login
 {
@@ -41,14 +42,24 @@ namespace Sweetie.Pages.Login
                 newScreen.Show();
                 this.Close();
             }
-            else
-            {
-                MessageBox.Show("Wrong Username or Password!");
-            }
         }
 
         async Task<bool> isLoginAsync(string user, string pass)
         {
+            var status = Database.Login(user, pass);
+            if (status == HttpStatusCode.OK)
+            {
+                return true;
+            }
+            else if (status == (HttpStatusCode)422) {
+                MessageBox.Show("Wrong username or password");
+                return false;
+            }
+            else if(status == HttpStatusCode.InternalServerError)
+            {
+                MessageBox.Show("Fail to connect to server");
+                return false;
+            }
             //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             //var values = new Dictionary<string, string>
             //{
@@ -62,30 +73,30 @@ namespace Sweetie.Pages.Login
 
             //var responseString = await response.Content.ReadAsStringAsync();
             //MessageBox.Show(responseString);
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://shopping-server-13706.herokuapp.com/users/signin");
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "POST";
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream())) {
-                string json = "{\"username\":\""+user+"\"," +
-                                "\"password\":\""+pass+"\"}";
-                //string json = @"{
-                //    'username':'admin',
-                //    'password':'12345678'
-                //}";
-                streamWriter.Write(json);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-            var httpRespond = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpRespond.GetResponseStream()))
-            {
-                var result = streamReader.ReadToEnd();
-                MessageBox.Show(result);
-                if (result.Contains("token"))
-                {
-                    return true;
-                }
-            }
+            //var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://shopping-server-13706.herokuapp.com/users/signin");
+            //httpWebRequest.ContentType = "application/json";
+            //httpWebRequest.Method = "POST";
+            //using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream())) {
+            //    string json = "{\"username\":\""+user+"\"," +
+            //                    "\"password\":\""+pass+"\"}";
+            //    //string json = @"{
+            //    //    'username':'admin',
+            //    //    'password':'12345678'
+            //    //}";
+            //    streamWriter.Write(json);
+            //    streamWriter.Flush();
+            //    streamWriter.Close();
+            //}
+            //var httpRespond = (HttpWebResponse)httpWebRequest.GetResponse();
+            //using (var streamReader = new StreamReader(httpRespond.GetResponseStream()))
+            //{
+            //    var result = streamReader.ReadToEnd();
+            //    MessageBox.Show(result);
+            //    if (result.Contains("token"))
+            //    {
+            //        return true;
+            //    }
+            //}
             return false;
         }
 

@@ -92,7 +92,7 @@
                     <materialDesign:MaterialDataGridTextColumn Binding="{Binding name}"
                                                                Header="Name"
                                                                EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" />
-                    <materialDesign:MaterialDataGridTextColumn Binding="{Binding descript}"
+                    <materialDesign:MaterialDataGridTextColumn Binding="{Binding description}"
                                                                Header="Description"                                                              
                                                                EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" />
                 </DataGrid.Columns>

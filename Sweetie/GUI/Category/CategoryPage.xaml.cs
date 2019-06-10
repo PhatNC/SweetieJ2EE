@@ -2,7 +2,9 @@
 using Sweetie.GUI.Category;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +16,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Sweetie.Utilities;
+using System.Data;
+using FastMember;
 
 namespace Sweetie.Pages.Category
 {
@@ -30,8 +35,18 @@ namespace Sweetie.Pages.Category
 
         void loadCategoryList()
         {
-            //    string query = "SELECT UserName, DisplayName, Type FROM dbo.Category";            
-            dgCategory.ItemsSource = CategoryDAO.Instance.getCategoryList().DefaultView;
+            var data = Database.GetAllCategories();
+            //foreach (var item in data)
+            //{
+            //    Console.WriteLine(item.id);
+            //}
+            DataTable dataTable = new DataTable();
+            using (var reader = ObjectReader.Create(data, "id", "name", "description"))
+            {
+                dataTable.Load(reader);
+            }
+            
+            dgCategory.ItemsSource = dataTable.DefaultView;
         }
 
         private void AddBtn_Click(object sender, RoutedEventArgs e)
