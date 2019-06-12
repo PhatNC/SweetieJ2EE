@@ -306,5 +306,49 @@ namespace Sweetie.Utilities
             }
             return HttpStatusCode.OK;
         }
-    }
+        public static HttpStatusCode AddToCard(int productID, int quantity)
+        {
+            string token = AccountDetails.Instance.Token;
+            string link = "http://shopping-server-13706.herokuapp.com/users/addToCart";
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(link);
+            httpWebRequest.PreAuthenticate = true;
+            httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "PUT";
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                //string json = "{\"name\":\"" + name + "\"," +
+                //                "\"description\":\"" + description + "\","+
+                //                 "\"categoryId\":\"" + categoryID + "\","+
+                //                 "\"price\":\"" + price + "\","+
+                //                 "\"remaining\":\"" + remaining + "\"}";
+                dynamic productObj = new ExpandoObject();
+                productObj.productID = productID;
+                productObj.quantity = quantity;
+                streamWriter.Write(JsonConvert.SerializeObject(productObj));
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+            try
+            {
+                var httpRespond = (HttpWebResponse)httpWebRequest.GetResponse();
+                HttpStatusCode status = httpRespond.StatusCode;
+                using (var streamReader = new StreamReader(httpRespond.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    if (httpRespond.StatusCode == HttpStatusCode.OK)
+                    {
+                        return HttpStatusCode.OK;
+                    }
+                }
+            }
+            catch (WebException e)
+            {
+                HttpStatusCode status = ((HttpWebResponse)e.Response).StatusCode;
+
+                return status;
+            }
+            return HttpStatusCode.OK;
+        }
+     }
 }

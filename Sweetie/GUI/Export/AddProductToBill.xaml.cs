@@ -36,6 +36,7 @@ namespace Sweetie.GUI.Export
             products = ProductDAO.Instance.getProductList().DefaultView;
             cbProduct.ItemsSource = products;
             cbProduct.SelectedIndex = 0;
+
         }
 
         private void CbProduct_SelectionChanged(object sender, SelectionChangedEventArgs e)
