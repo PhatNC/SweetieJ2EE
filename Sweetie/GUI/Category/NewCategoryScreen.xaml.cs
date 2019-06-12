@@ -12,6 +12,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Sweetie.Utilities;
+using System.Net;
 
 namespace Sweetie.GUI.Category
 {
@@ -49,10 +51,16 @@ namespace Sweetie.GUI.Category
                 return;
             }
 
-            CategoryDAO.Instance.InsertCategory(
-                tbxName.Text,
-                tbxDescript.Text);
-            MessageBox.Show("Add Successful!");
+            var status = Database.CreateNewCategory(tbxName.Text, tbxDescript.Text);
+            if (status == HttpStatusCode.OK)
+            {
+                MessageBox.Show("Add Successful!");
+            }
+            else if(status == (HttpStatusCode)422)
+            {
+                MessageBox.Show("Name cannot be empty");
+            }
+            
             this.Close();
         }
     }

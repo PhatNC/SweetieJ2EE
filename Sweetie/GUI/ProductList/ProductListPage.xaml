@@ -97,16 +97,18 @@
 
                     <materialDesign:MaterialDataGridComboBoxColumn x:Name="cbCategory"
                                                                    Header="Category"
-                                                                   SelectedValueBinding="{Binding idCategory}"                                                                                                                                      
+                                                                   SelectedValueBinding="{Binding category}"
+                                                                   SelectedValuePath="{Binding category.id}"
                                                                    DisplayMemberPath="name"
-                                                                   SelectedValuePath="id"/>
+                                                                   />
                     <materialDesign:MaterialDataGridTextColumn Binding="{Binding price}"
                                                                Header="Price"                                                              
                                                                EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" />
-                    <materialDesign:MaterialDataGridTextColumn Binding="{Binding descript}"
+                    <materialDesign:MaterialDataGridTextColumn Binding="{Binding description}"
                                                                Header="Description"                                                              
                                                                EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" />
-                    <materialDesign:MaterialDataGridTextColumn Binding="{Binding remain}"
+                    
+                    <materialDesign:MaterialDataGridTextColumn Binding="{Binding remaining}"
                                                                Header="Remain"                                                              
                                                                EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" />
                 </DataGrid.Columns>

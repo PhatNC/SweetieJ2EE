@@ -12,6 +12,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Sweetie.Utilities;
+using System.Net;
+using System.Data;
+using FastMember;
 
 namespace Sweetie.GUI.ProductList
 {
@@ -23,8 +27,20 @@ namespace Sweetie.GUI.ProductList
         public NewProductScreen()
         {
             InitializeComponent();
+            loadCategory();
         }
+        private void loadCategory()
+        {
+            var data = Database.GetAllCategories();
+            DataTable dataTable = new DataTable();
 
+            using (var reader = ObjectReader.Create(data, "id", "name", "description"))
+            {
+                dataTable.Load(reader);
+            }
+
+            cbbxCategory.ItemsSource = data;
+        }
         private bool isCanChecked()
         {
             if (tbxName.Text == null ||
@@ -48,15 +64,17 @@ namespace Sweetie.GUI.ProductList
                 MessageBox.Show("Please fill the name of product");
                 return;
             }
-            
-            ProductDAO.Instance.InsertProduct(
-                tbxName.Text,
-                Int32.Parse(tbxidCategory.Text),
-                Int32.Parse(tbxPrice.Text),
-                tbxDescript.Text,
-                Int32.Parse(tbxRemain.Text)
-                );
-            MessageBox.Show("Add Successful!");
+            var category = cbbxCategory.SelectedValue as Sweetie.Utilities.Category;
+            int categoryID = int.Parse(category.id);
+            var status = Database.CreateNewProduct(tbxName.Text,tbxDescript.Text, categoryID, float.Parse( tbxPrice.Text), int.Parse(tbxRemain.Text));
+            if (status == HttpStatusCode.OK)
+            {
+                MessageBox.Show("Add Successful!");
+            }
+            else if (status == (HttpStatusCode)422)
+            {
+                MessageBox.Show("Name cannot be empty");
+            }
             this.Close();
         }
     }

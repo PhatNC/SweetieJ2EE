@@ -15,6 +15,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Sweetie.Utilities;
+using FastMember;
+using System.Net;
 
 namespace Sweetie.Pages.ProductList
 {
@@ -24,7 +27,7 @@ namespace Sweetie.Pages.ProductList
     public partial class ProductListPage : Page
     {
         private System.Collections.IEnumerable categories;
-
+        static DataTable categoryTable;
         public ProductListPage()
         {
             InitializeComponent();
@@ -34,19 +37,39 @@ namespace Sweetie.Pages.ProductList
 
         private void loadCategory()
         {
-            categories = CategoryDAO.Instance.getCategoryList().DefaultView;
-            cbCategory.ItemsSource = categories;
+            var data = Database.GetAllCategories();
+            DataTable dataTable = new DataTable();
+
+            using (var reader = ObjectReader.Create(data, "id", "name", "description"))
+            {
+                dataTable.Load(reader);
+            }
+
+            cbCategory.ItemsSource = data;
         }
 
         void loadProductList()
-        {        
-            dgProduct.ItemsSource = ProductDAO.Instance.getProductList().DefaultView;
+        {
+            var data = Database.GetAllProduct();
+            DataTable dataTable = new DataTable();
+            
+            using (var reader = ObjectReader.Create(data, "id", "name", "description","category","price","remaining","enable" ))
+            {
+                dataTable.Load(reader);
+            }
+            //cbCategory.ItemsSource = dataTable.Columns[3].Table;
+            //categoryTable = dataTable.DefaultView.ToTable(false, dataTable.Columns[3].ColumnName);
+
+            //cbCategory.ItemsSource = categoryTable.DefaultView;
+            dgProduct.ItemsSource = dataTable.DefaultView;
         }
 
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
             NewProductScreen addScreen = new NewProductScreen();
             addScreen.ShowDialog();
+            loadCategory();
+            loadProductList();
         }
 
         private void UpdateBtn_Click(object sender, RoutedEventArgs e)
@@ -54,13 +77,26 @@ namespace Sweetie.Pages.ProductList
             object item = dgProduct.SelectedItem;
             int id = Int32.Parse((dgProduct.SelectedCells[0].Column.GetCellContent(item) as TextBlock).Text);
             string name = (dgProduct.SelectedCells[1].Column.GetCellContent(item) as TextBlock).Text;
-            int idCategory = Int32.Parse((dgProduct.SelectedCells[2].Column.GetCellContent(item) as ComboBox).SelectedValue.ToString());
-            int price = Int32.Parse((dgProduct.SelectedCells[3].Column.GetCellContent(item) as TextBlock).Text);
-            string descript = (dgProduct.SelectedCells[4].Column.GetCellContent(item) as TextBlock).Text;
-            int remain = Int32.Parse((dgProduct.SelectedCells[5].Column.GetCellContent(item) as TextBlock).Text);
-
-            ProductDAO.Instance.UpdateProduct(id, name, idCategory, price, descript, remain);
-            MessageBox.Show("Update Succesfully!");
+            var comboBox = dgProduct.SelectedCells[2].Column.GetCellContent(item) as ComboBox;
+            var category = comboBox.SelectedValue as Sweetie.Utilities.Category;
+            string idCategory = category.id;
+            float price = float.Parse((dgProduct.SelectedCells[3].Column.GetCellContent(item) as TextBlock).Text);
+            string description = (dgProduct.SelectedCells[4].Column.GetCellContent(item) as TextBlock).Text;
+            int remaining = Int32.Parse((dgProduct.SelectedCells[5].Column.GetCellContent(item) as TextBlock).Text);
+            var status = Database.UpdateProduct(id.ToString(), name, description, int.Parse(idCategory), price, remaining);
+            if (status == HttpStatusCode.OK)
+            {
+                MessageBox.Show("Update Successful!");
+                loadCategory();
+                loadProductList();
+            }
+            else if (status == (HttpStatusCode)422)
+            {
+                MessageBox.Show("Something when wrong");
+            }
+            
+            //ProductDAO.Instance.UpdateProduct(id, name, idCategory, price, descript, remain);
+            //MessageBox.Show("Update Succesfully!");
         }
 
         private void DeleteBtn_Click(object sender, RoutedEventArgs e)

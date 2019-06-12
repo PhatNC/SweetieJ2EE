@@ -53,6 +53,7 @@ namespace Sweetie.Pages.Category
         {
             NewCategoryScreen addScreen = new NewCategoryScreen();
             addScreen.ShowDialog();
+            loadCategoryList();
         }
 
         private void UpdateBtn_Click(object sender, RoutedEventArgs e)
@@ -61,24 +62,33 @@ namespace Sweetie.Pages.Category
             int id = Int32.Parse((dgCategory.SelectedCells[0].Column.GetCellContent(item) as TextBlock).Text);
             string name= (dgCategory.SelectedCells[1].Column.GetCellContent(item) as TextBlock).Text;
             string descript= (dgCategory.SelectedCells[2].Column.GetCellContent(item) as TextBlock).Text;
+            var status = Database.UpdateCategory( id, name, descript);
+            if (status == HttpStatusCode.OK)
+            {
+                MessageBox.Show("Update Succesfully!");
+            }
+            else if(status == (HttpStatusCode)422)
+            {
+                MessageBox.Show("Name cannot be empty!");
+            }
+            loadCategoryList();
             
-            CategoryDAO.Instance.UpdateCategory(id, name, descript);
-            MessageBox.Show("Update Succesfully!");
         }
 
         private void DeleteBtn_Click(object sender, RoutedEventArgs e)
         {
-            object item = dgCategory.SelectedItem;
-            int id = Int32.Parse((dgCategory.SelectedCells[0].Column.GetCellContent(item) as TextBlock).Text);
+            //object item = dgCategory.SelectedItem;
+            //int id = Int32.Parse((dgCategory.SelectedCells[0].Column.GetCellContent(item) as TextBlock).Text);
 
-            CategoryDAO.Instance.DeleteCategory(id);
-            MessageBox.Show("Delete Succesfully!");
+            //CategoryDAO.Instance.DeleteCategory(id);
+            //MessageBox.Show("Delete Succesfully!");
         }
 
         private void RefreshBtn_Click(object sender, RoutedEventArgs e)
         {
-            dgCategory.ItemsSource = null;
-            dgCategory.ItemsSource = CategoryDAO.Instance.getCategoryList().DefaultView;
+            //dgCategory.ItemsSource = null;
+            //dgCategory.ItemsSource = CategoryDAO.Instance.getCategoryList().DefaultView;
+            loadCategoryList();
         }
     }
 }

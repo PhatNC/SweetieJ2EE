@@ -50,8 +50,9 @@
         </StackPanel>
         <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Orientation="Horizontal">
             <Label Content="Category" Style="{StaticResource lbStyle}"></Label>
-            <TextBox x:Name="tbxidCategory"
-                     materialDesign:HintAssist.Hint="Category ID"
+            <ComboBox x:Name="cbbxCategory"
+                     materialDesign:HintAssist.Hint="Category"
+                     DisplayMemberPath="name"
                      Height="30" Width="180"/>
         </StackPanel>
         <StackPanel Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left" Orientation="Horizontal">
