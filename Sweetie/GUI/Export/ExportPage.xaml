@@ -99,20 +99,22 @@
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"
                           Grid.Row="2"
-                          CanUserSortColumns="True"                         
+                          CanUserSortColumns="True"     
+                          AutoGenerateColumns="False"
                           materialDesign:DataGridAssist.CellPadding="13 8 8 8"
                           materialDesign:DataGridAssist.ColumnHeaderPadding="8">
                     <DataGrid.Columns>
-                        <materialDesign:MaterialDataGridTextColumn Binding="{Binding name}"
+                        <materialDesign:MaterialDataGridTextColumn Binding="{Binding id}"
+                                                                   Header="Product Name"
+                                                                   EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" />
+
+                        <materialDesign:MaterialDataGridTextColumn Binding="{Binding productName}"
                                                                Header="Product Name"
                                                                EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" />
-                        <materialDesign:MaterialDataGridTextColumn Binding="{Binding idCategory}"
-                                                               Header="Price"                                                              
+                        <materialDesign:MaterialDataGridTextColumn Binding="{Binding quantity}"
+                                                               Header="Quantity"                                                              
                                                                EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" />
-                        <materialDesign:MaterialDataGridTextColumn Binding="{Binding price}"
-                                                               Header="Quatity"                                                              
-                                                               EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" />
-                        <materialDesign:MaterialDataGridTextColumn Binding="{Binding descript}"
+                        <materialDesign:MaterialDataGridTextColumn Binding="{Binding totalPrice}"
                                                                Header="Total"                                                              
                                                                EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" />
                     </DataGrid.Columns>

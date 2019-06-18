@@ -42,7 +42,7 @@ namespace Sweetie.Utilities
     }
     public class Product
     {
-        public string id { get; set; }
+        public int id { get; set; }
         public string name { get; set; }
         public string description { get; set; }
 
@@ -52,6 +52,16 @@ namespace Sweetie.Utilities
         public bool enable { get; set; }
 
     }
+
+    public class Item
+    {
+        public int id { get; set; }
+        public int productId { get; set; }
+        public String productName { get; set; }
+        public int quantity { get; set; }
+        public float totalPrice { get; set; }
+    }
+    
     public sealed class Database
     {
 
@@ -258,6 +268,25 @@ namespace Sweetie.Utilities
             }
             return HttpStatusCode.OK;
         }
+
+        public static List<Item> GetCart()
+        {
+            string token = AccountDetails.Instance.Token;
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://shopping-server-13706.herokuapp.com/users/cart");
+            httpWebRequest.PreAuthenticate = true;
+            httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "GET";
+            var httpRespond = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpRespond.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+                List<Item> items = JsonConvert.DeserializeObject<List<Item>>(result);
+                
+                return items;
+            }
+        }
+        
         public static HttpStatusCode UpdateProduct(string id,string name, string description, int categoryID, float price, int remaining)
         {
             string token = AccountDetails.Instance.Token;
@@ -306,7 +335,7 @@ namespace Sweetie.Utilities
             }
             return HttpStatusCode.OK;
         }
-        public static HttpStatusCode AddToCard(int productID, int quantity)
+        public static HttpStatusCode AddToCart(int productID, int quantity)
         {
             string token = AccountDetails.Instance.Token;
             string link = "http://shopping-server-13706.herokuapp.com/users/addToCart";
@@ -314,7 +343,7 @@ namespace Sweetie.Utilities
             httpWebRequest.PreAuthenticate = true;
             httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
             httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "PUT";
+            httpWebRequest.Method = "POST";
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
                 //string json = "{\"name\":\"" + name + "\"," +
@@ -323,7 +352,7 @@ namespace Sweetie.Utilities
                 //                 "\"price\":\"" + price + "\","+
                 //                 "\"remaining\":\"" + remaining + "\"}";
                 dynamic productObj = new ExpandoObject();
-                productObj.productID = productID;
+                productObj.productId = productID;
                 productObj.quantity = quantity;
                 streamWriter.Write(JsonConvert.SerializeObject(productObj));
                 streamWriter.Flush();
@@ -350,5 +379,103 @@ namespace Sweetie.Utilities
             }
             return HttpStatusCode.OK;
         }
+        
+        public static HttpStatusCode DeleteItem(int itemId)
+        {
+            string token = AccountDetails.Instance.Token;
+            string link = $"http://shopping-server-13706.herokuapp.com/users/cart/{itemId}";
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(link);
+            httpWebRequest.PreAuthenticate = true;
+            httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "DELETE";
+            
+            try
+            {
+                var httpRespond = (HttpWebResponse)httpWebRequest.GetResponse();
+                HttpStatusCode status = httpRespond.StatusCode;
+                using (var streamReader = new StreamReader(httpRespond.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    if (httpRespond.StatusCode == HttpStatusCode.OK)
+                    {
+                        return HttpStatusCode.OK;
+                    }
+                }
+            }
+            catch (WebException e)
+            {
+                HttpStatusCode status = ((HttpWebResponse)e.Response).StatusCode;
+
+                return status;
+            }
+            return HttpStatusCode.OK;
+        }
+        
+        public static HttpStatusCode ClearCart()
+        {
+            string token = AccountDetails.Instance.Token;
+            string link = $"http://shopping-server-13706.herokuapp.com/users/cart";
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(link);
+            httpWebRequest.PreAuthenticate = true;
+            httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "DELETE";
+            
+            try
+            {
+                var httpRespond = (HttpWebResponse)httpWebRequest.GetResponse();
+                HttpStatusCode status = httpRespond.StatusCode;
+                using (var streamReader = new StreamReader(httpRespond.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    if (httpRespond.StatusCode == HttpStatusCode.OK)
+                    {
+                        return HttpStatusCode.OK;
+                    }
+                }
+            }
+            catch (WebException e)
+            {
+                HttpStatusCode status = ((HttpWebResponse)e.Response).StatusCode;
+
+                return status;
+            }
+            return HttpStatusCode.OK;
+        }
+        
+        public static HttpStatusCode Checkout()
+        {
+            string token = AccountDetails.Instance.Token;
+            string link = $"http://shopping-server-13706.herokuapp.com/users/checkout";
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(link);
+            httpWebRequest.PreAuthenticate = true;
+            httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "DELETE";
+            
+            try
+            {
+                var httpRespond = (HttpWebResponse)httpWebRequest.GetResponse();
+                HttpStatusCode status = httpRespond.StatusCode;
+                using (var streamReader = new StreamReader(httpRespond.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    if (httpRespond.StatusCode == HttpStatusCode.OK)
+                    {
+                        return HttpStatusCode.OK;
+                    }
+                }
+            }
+            catch (WebException e)
+            {
+                HttpStatusCode status = ((HttpWebResponse)e.Response).StatusCode;
+
+                return status;
+            }
+            return HttpStatusCode.OK;
+        }
      }
+    
+    
 }

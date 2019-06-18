@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +15,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Sweetie.Utilities;
+using Product = Sweetie.Utilities.Product;
 
 namespace Sweetie.GUI.Export
 {
@@ -23,7 +26,7 @@ namespace Sweetie.GUI.Export
     public partial class AddProductToBill : Window
     {
         private System.Collections.IEnumerable products;
-        public DataRowView productSelected;
+        public Product productSelected;
         public int quantity;
 
         public AddProductToBill()
@@ -33,7 +36,8 @@ namespace Sweetie.GUI.Export
         }
         private void loadProduct()
         {
-            products = ProductDAO.Instance.getProductList().DefaultView;
+            products = Database.GetAllProduct();
+//            products = ProductDAO.Instance.getProductList().DefaultView;
             cbProduct.ItemsSource = products;
             cbProduct.SelectedIndex = 0;
 
@@ -41,20 +45,35 @@ namespace Sweetie.GUI.Export
 
         private void CbProduct_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            DataRowView selected = cbProduct.SelectedItem as DataRowView;
-            updownQuatity.Maximum = (int)selected.Row.ItemArray[5];
+            productSelected = cbProduct.SelectedItem as Product;
+            updownQuatity.Maximum = productSelected.remaining;
             if (updownQuatity.Value > updownQuatity.Maximum)
             {
                 updownQuatity.Value = updownQuatity.Maximum;
             }
+//            DataRowView selected = cbProduct.SelectedItem as DataRowView;
+//            updownQuatity.Maximum = (int)selected.Row.ItemArray[5];
+//            if (updownQuatity.Value > updownQuatity.Maximum)
+//            {
+//                updownQuatity.Value = updownQuatity.Maximum;
+//            }
         }
 
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
-            DataRowView selected = cbProduct.SelectedItem as DataRowView;
-            productSelected = selected;
+//            DataRowView selected = cbProduct.SelectedItem as DataRowView;
+            productSelected = cbProduct.SelectedItem as Product;
             quantity =(int) updownQuatity.Value;
-            this.Close();
+            
+            var statusCode = Database.AddToCart(productSelected.id, quantity);
+            if (statusCode == HttpStatusCode.OK)
+            {
+                this.Close();
+            }
+            else if(statusCode == (HttpStatusCode)422)
+            {
+                MessageBox.Show("Invalid input");
+            }
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
