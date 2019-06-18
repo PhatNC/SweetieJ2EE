@@ -61,6 +61,15 @@ namespace Sweetie.Utilities
         public int quantity { get; set; }
         public float totalPrice { get; set; }
     }
+
+    public class Bill
+    {
+        public int id { get; set; }
+        public List<Item> items { get; set; }
+        public string createdDate { get; set; }
+        public int userId { get; set; }
+        public float totalPrice { get; set; }
+    }
     
     public sealed class Database
     {
@@ -287,6 +296,24 @@ namespace Sweetie.Utilities
             }
         }
         
+        public static List<Bill> GetAllBills()
+        {
+            string token = AccountDetails.Instance.Token;
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://shopping-server-13706.herokuapp.com/bills");
+            httpWebRequest.PreAuthenticate = true;
+            httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "GET";
+            var httpRespond = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpRespond.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+                List<Bill> bills = JsonConvert.DeserializeObject<List<Bill>>(result);
+                
+                return bills;
+            }
+        }
+        
         public static HttpStatusCode UpdateProduct(string id,string name, string description, int categoryID, float price, int remaining)
         {
             string token = AccountDetails.Instance.Token;
@@ -452,7 +479,7 @@ namespace Sweetie.Utilities
             httpWebRequest.PreAuthenticate = true;
             httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
             httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "DELETE";
+            httpWebRequest.Method = "POST";
             
             try
             {

@@ -274,18 +274,19 @@
                       CanUserAddRows="False"
                       IsReadOnly="True"
                       materialDesign:DataGridAssist.CellPadding="13 8 8 8"
-                      materialDesign:DataGridAssist.ColumnHeaderPadding="8">
+                      materialDesign:DataGridAssist.ColumnHeaderPadding="8"
+                      AutoGenerateColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding id}"
                                         Header="ID"
                                         IsReadOnly="True" />
-                        <DataGridTextColumn Binding="{Binding DateCheckIn}"
+                        <DataGridTextColumn Binding="{Binding userId}"
                                         Header="Date Check in"
                                         IsReadOnly="True" />
-                        <DataGridTextColumn Binding="{Binding DateCheckOut}"
+                        <DataGridTextColumn Binding="{Binding createdDate}"
                                         Header="Date Check out"
                                         IsReadOnly="True" />
-                        <DataGridTextColumn Binding="{Binding total}"
+                        <DataGridTextColumn Binding="{Binding totalPrice}"
                                         Header="Total Price"
                                         IsReadOnly="True" />
                     </DataGrid.Columns>

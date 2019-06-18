@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FastMember;
+using Sweetie.Utilities;
 
 namespace Sweetie.GUI.SaleReport
 {
@@ -23,6 +26,17 @@ namespace Sweetie.GUI.SaleReport
         public SaleReportPage()
         {
             InitializeComponent();
+            
+            var bills = Database.GetAllBills();
+
+            DataTable dataTable = new DataTable();
+
+            using (var reader = ObjectReader.Create(bills, "id", "userId", "createdDate", "totalPrice"))
+            {
+                dataTable.Load(reader);
+            }
+
+            ReportDetailDataGrid.ItemsSource = dataTable.DefaultView;
         }
     }
 }

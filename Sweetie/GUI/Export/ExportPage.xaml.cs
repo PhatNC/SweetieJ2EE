@@ -73,7 +73,24 @@ namespace Sweetie.GUI.Export
 
         private void AddBillBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+            if (Database.Checkout() == HttpStatusCode.OK)
+            {
+                MessageBox.Show("Checkout successfully");
+
+                var items = Database.GetCart();
+                DataTable dataTable = new DataTable();
+
+                using (var reader = ObjectReader.Create(items, "id", "productId", "quantity", "productName", "quantity", "totalPrice"))
+                {
+                    dataTable.Load(reader);
+                }
+
+                dgProduct.ItemsSource = dataTable.DefaultView;
+            }
+            else
+            {
+                MessageBox.Show("Invalid input");
+            }
         }
 
         private void RefreshBtn_Click(object sender, RoutedEventArgs e)
